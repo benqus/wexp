@@ -30,7 +30,7 @@
 }
 
 #App > #main > .UserView > .repository-data {
-    -webkit-box-flex: 4;
-    -moz-box-flex: 4;
-    box-flex: 4;
+    -webkit-box-flex: 6;
+    -moz-box-flex: 6;
+    box-flex: 6;
 }
