@@ -74,29 +74,10 @@
         },
 
         /**
-         * rerenders all children
-         * @returns {ViewGroup}
-         */
-        rerenderChildren: function () {
-            var children = this.children,
-                name;
-
-            for (name in children) {
-                if (children.hasOwnProperty(name)) {
-                    children[name]
-                        .remove()
-                        .render(this.$el);
-                }
-            }
-
-            return this;
-        },
-
-        /**
          * renders all children
          * @returns {ViewGroup}
          */
-        renderChildren: function () {
+        renderViews: function () {
             var children = this.children,
                 name;
 
@@ -113,7 +94,7 @@
          * removes all children
          * @returns {ViewGroup}
          */
-        removeChildren: function () {
+        removeViews: function () {
             var children = this.children,
                 name;
 
@@ -127,11 +108,41 @@
         },
 
         /**
+         * rerenders all children
+         * @returns {ViewGroup}
+         */
+        rerenderViews: function () {
+            var children = this.children,
+                name;
+
+            for (name in children) {
+                if (children.hasOwnProperty(name)) {
+                    children[name]
+                        .remove()
+                        .render(this.$el);
+                }
+            }
+
+            return this;
+        },
+
+        /**
+         * @override
+         * @returns {*}
+         */
+        rerender: function () {
+            this.removeViews();
+            this.render();
+
+            return this;
+        },
+
+        /**
          * @override
          * @returns {*}
          */
         render: function () {
-            this.renderChildren();
+            this.renderViews();
             return Backbone.View.prototype.render.call(this);
         }
 

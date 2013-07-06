@@ -66,7 +66,7 @@
         ok(!$.contains(viewGroup.$el[0], view.$el[0]));
     });
 
-    test("renderChildren", function () {
+    test("renderViews", function () {
         var viewGroup = new Backbone.ViewGroup();
         var childCount = 5;
         var i;
@@ -81,7 +81,7 @@
             ok(!$.contains(viewGroup.$el[0], viewGroup.children["child" + i].view.$el[0]));
         }
 
-        viewGroup.renderChildren();
+        viewGroup.renderViews();
 
         for (i = 0; i < childCount; i++) {
             equal(viewGroup.children["child" + i].rendered, true);
@@ -89,7 +89,7 @@
         }
     });
 
-    test("removeChildren", function () {
+    test("removeViews", function () {
         var viewGroup = new Backbone.ViewGroup();
         var childCount = 5;
         var i;
@@ -98,13 +98,12 @@
             viewGroup.addView("child" + i, new Backbone.View({}));
         }
 
-        viewGroup.removeChildren();
+        viewGroup.removeViews();
 
         for (i = 0; i < childCount; i++) {
             equal(viewGroup.children["child" + i].rendered, false);
             ok(!$.contains(viewGroup.$el[0], viewGroup.children["child" + i].view.$el[0]));
         }
     });
-
 
 }());
