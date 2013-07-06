@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+#App > header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1em 2em;
+    background-color: lightgray;
+    box-shadow: 0 .1em .25em rgba(0, 0, 0, 0.5);
+    display: box;
+}
+
+#App > header > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#App > header > h1 {
+    font-size: 2em;
+    padding: 0;
+    margin: 0;
+}
+
+#App > header > #user-search > span.at {
+    margin-left: 1em;
+    margin-right: .25em;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+#App > header > #user-search > input.user-search {
+    width: 7.5em;
+    color: rgba(0, 0, 0, 0.75);
+    border: none;
+    padding: .25em .5em;
+    box-shadow: inset 0 .1em .25em rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-radius: .4em;
+    background-color: rgba(119, 136, 153, 0.25);
+
+    -webkit-transition: width .2s ease-in;
+    -moz-transition: width .2s ease-in;
+    transition: all .2s ease-in-out;
+}
+
+#App > header > #user-search > input.user-search:focus {
+    width: 15em;
+    color: rgb(233, 150, 122);
+    outline: 0;
+    text-shadow: 0 0 .5em white;
+    font-size: 1.75em;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgb(233, 150, 122);
+}

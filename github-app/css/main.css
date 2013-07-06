@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+#App > #main {
+    width: 100%;
+    padding: 5em 0 0 0;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+}
+
+#App > #main > .UserView {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+}
+
+#App > #main > .UserView > .user-data {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+}
+
+#App > #main > .UserView > .repository-data {
+    -webkit-box-flex: 4;
+    -moz-box-flex: 4;
+    box-flex: 4;
+}
