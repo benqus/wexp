@@ -3,6 +3,11 @@ define([
 ], function (RepositoryModel) {
     return Backbone.Collection.extend({
         url: "/repos",
-        model: RepositoryModel
+        model: RepositoryModel,
+
+        setUrl: function (url) {
+            this.url = url;
+            this.fetch();
+        }
     });
 });

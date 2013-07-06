@@ -1,46 +1,45 @@
 define([
     'controller/Controller',
+    'collection/RepositoriesCollection',
+    'controller/RepositoriesController',
     'view/RepositoriesView',
     'view/UserView',
     'model/UserModel'
-], function (Controller, RepositoriesView, UserView, UserModel) {
+], function (Controller, RepositoriesCollection, RepositoriesController, RepositoriesView, UserView, UserModel) {
 
     function UserController(setup) {
+        Controller.call(this, undefined, undefined);
+
         setup = setup || {};
 
-        var repositoriesView = new RepositoriesView();
-        var model = new UserModel({ "userName": setup.userName });
-        var view = new UserView({
-            "model": model,
-            "repositories": repositoriesView
-        });
-
-        Controller.call(this, view, model);
-
         this.containerView = setup.container;
-        this.repositoriesView = repositoriesView;
-
+        this.model = new UserModel({
+            userName: setup.userName
+        });
+        this.repositoriesController = new RepositoriesController(undefined, this.model);
+        this.view = new UserView({
+            model: this.model,
+            repositories: this.repositoriesController.getView()
+        });
         this.addListeners();
     }
 
-    UserController.prototype = Object.create(Controller.prototype);
-    UserController.prototype.constructor = UserController;
+    var proto = UserController.prototype = Object.create(Controller.prototype);
+    proto.constructor = UserController;
 
-    UserController.prototype.addListeners = function () {
-        this.model.on("change:loaded", this.renderView, this);
+    proto.addListeners = function () {
+        this.getModel().on("change:loaded", this.renderView, this);
     };
 
-    UserController.prototype.renderView = function () {
+    proto.renderView = function () {
         var containerView = this.containerView;
 
         if (containerView) {
             containerView.$el.append(this.getView().render().$el);
-
-            this.repositoriesView.updateRepositories(this.getModel().get("reposUrl"));
         }
     };
 
-    UserController.prototype.destroy = function () {
+    proto.destroy = function () {
         var containerView = this.containerView;
 
         if (containerView) {

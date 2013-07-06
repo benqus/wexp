@@ -9,14 +9,8 @@ define([
         },
 
         render: function () {
-            var model = this.model;
-
             this.$el
-                .append(UserTemplate({
-                    "avatarUrl": model.get("avatarUrl"),
-                    "userName": model.get("userName"),
-                    "reposCount": model.get("reposCount")
-                }))
+                .append(UserTemplate(this.model.attributes))
                 .find("nav.repositories")
                     .empty()
                     .append(this.repositories.render().$el);
