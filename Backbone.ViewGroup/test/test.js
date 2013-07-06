@@ -66,4 +66,45 @@
         ok(!$.contains(viewGroup.$el[0], view.$el[0]));
     });
 
+    test("renderChildren", function () {
+        var viewGroup = new Backbone.ViewGroup();
+        var childCount = 5;
+        var i;
+
+        for (i = 0; i < childCount; i++) {
+            viewGroup.addView("child" + i, new Backbone.View({}), false);
+        }
+
+        equal(getChildLength(viewGroup), 5);
+        for (i = 0; i < childCount; i++) {
+            ok(viewGroup.children.hasOwnProperty("child" + i));
+            ok(!$.contains(viewGroup.$el[0], viewGroup.children["child" + i].view.$el[0]));
+        }
+
+        viewGroup.renderChildren();
+
+        for (i = 0; i < childCount; i++) {
+            equal(viewGroup.children["child" + i].rendered, true);
+            ok($.contains(viewGroup.$el[0], viewGroup.children["child" + i].view.$el[0]));
+        }
+    });
+
+    test("removeChildren", function () {
+        var viewGroup = new Backbone.ViewGroup();
+        var childCount = 5;
+        var i;
+
+        for (i = 0; i < childCount; i++) {
+            viewGroup.addView("child" + i, new Backbone.View({}));
+        }
+
+        viewGroup.removeChildren();
+
+        for (i = 0; i < childCount; i++) {
+            equal(viewGroup.children["child" + i].rendered, false);
+            ok(!$.contains(viewGroup.$el[0], viewGroup.children["child" + i].view.$el[0]));
+        }
+    });
+
+
 }());
