@@ -1,11 +1,12 @@
 define([
     'controller/Controller',
-    'collection/RepositoriesCollection',
     'controller/RepositoriesController',
+    'controller/RepositoryController',
     'view/RepositoriesView',
     'view/UserView',
+    'model/AppModel',
     'model/UserModel'
-], function (Controller, RepositoriesCollection, RepositoriesController, RepositoriesView, UserView, UserModel) {
+], function (Controller, RepositoriesController, RepositoryController, RepositoriesView, UserView, AppModel, UserModel) {
 
     function UserController(setup) {
         Controller.call(this, undefined, undefined);
@@ -17,10 +18,13 @@ define([
             userName: setup.userName
         });
         this.repositoriesController = new RepositoriesController(undefined, this.model);
+        this.repositoryController = new RepositoryController();
         this.view = new UserView({
             model: this.model,
-            repositories: this.repositoriesController.getView()
+            repositories: this.repositoriesController.getView(),
+            repository: this.repositoryController.getView()
         });
+
         this.addListeners();
     }
 
@@ -28,7 +32,14 @@ define([
     proto.constructor = UserController;
 
     proto.addListeners = function () {
+        AppModel.on("change:currentRepositoryIndex", this.showRepository, this);
         this.getModel().on("change:loaded", this.renderView, this);
+    };
+
+    proto.showRepository = function () {
+        var index = AppModel.getRepositoryIndex();
+        var repository = this.repositoriesController.getRepository(index);
+        this.repositoryController.setRepository(repository);
     };
 
     proto.renderView = function () {

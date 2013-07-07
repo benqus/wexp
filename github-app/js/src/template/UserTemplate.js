@@ -8,9 +8,6 @@ define(function () {
                 "<nav class='repositories'></nav>" +
             "</div>" +
         "</article>" +
-
-        "<article class='repository-data'>" +
-
-        "</article>"
+        "<article class='repository-data'></article>"
     );
 });

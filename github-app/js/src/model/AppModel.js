@@ -7,6 +7,7 @@ define([
     return new (Backbone.Model.extend({
         defaults: {
             defaultUser: config.defaultUser,
+            currentRepositoryIndex: -1,
             currentUser: ""
         },
 
@@ -22,6 +23,16 @@ define([
 
         getUser: function () {
             return this.get("currentUser") || this.get("defaultUser");
+        },
+
+        getRepositoryIndex: function () {
+            return this.get("currentRepositoryIndex");
+        },
+
+        setRepositoryIndex: function (index) {
+            this.set({
+                "currentRepositoryIndex": index
+            });
         }
     }));
 

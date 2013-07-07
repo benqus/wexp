@@ -10,7 +10,7 @@ define([
 
         this.collection = new RepositoriesCollection();
         this.view = new RepositoriesView({
-            collection: this.collection
+            collection: this.getCollection()
         });
 
         this.addListeners();
@@ -24,7 +24,15 @@ define([
     };
 
     proto.syncRepos = function (model) {
-        this.collection.setUrl(model.get("reposUrl"));
+        this.getCollection().setUrl(model.get("reposUrl"));
+    };
+
+    proto.getCollection = function () {
+        return this.collection;
+    };
+
+    proto.getRepository = function (index) {
+        return this.getCollection().models[index];
     };
 
     return RepositoriesController;
