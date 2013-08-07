@@ -12,9 +12,6 @@ require([
     var canvas = new Canvas("canvas");
     var element = canvas.getElement();
 
-//    element.style.width = window.innerWidth + "px";
-//    element.style.height = window.innerHeight + "px";
-
     element.width = window.innerWidth;
     element.height = window.innerHeight;
 
