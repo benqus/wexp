@@ -52,7 +52,6 @@ require([
                     .setPosition(x, y)
                     .setRadius(10)
                     .setStrokeWidth(1)
-                    .below()
                     .setFillColor("#ff0000")
                     .draw();
 
