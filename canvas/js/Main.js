@@ -10,8 +10,15 @@ require([
     'drawing/Circle'
 ], function (Canvas, Line, Circle) {
     var canvas = new Canvas("canvas");
+    var $document = $(document);
 
-    $(document)
+    $(canvas.getElement())
+        .attr({
+            width: $document.width() + "px",
+            height: $document.height() + "px"
+        });
+
+    $document
         .on("mousedown", function (evt) {
             canvas.startDrawing(evt.screenX, evt.screenY);
         })
@@ -34,10 +41,8 @@ require([
                 var circle = new Circle(element);
                 circle
                     .setPosition(x, y)
-                    .setRadius(15)
+                    .setRadius(3)
                     .draw();
-
-                console.log(line, circle);
 
                 canvas.setLastPositions(x, y);
             }

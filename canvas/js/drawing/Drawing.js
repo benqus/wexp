@@ -18,8 +18,8 @@ define(function () {
 
         //base draw method, needs to be overridden
         draw: function () {
-            this.getContext()
-                .restore();
+//            this.getContext()
+//                .restore();
 
             return this;
         }
