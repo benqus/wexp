@@ -20,15 +20,15 @@ require([
 
     $document
         .on("mousedown", function (evt) {
-            canvas.startDrawing(evt.screenX, evt.screenY);
+            canvas.startDrawing(evt.pageX, evt.pageY);
         })
         .on("mousemove", function (evt) {
             var last = canvas.lastPositions;
             var element = canvas.getElement();
 
             if (canvas.isDrawing) {
-                var x = evt.screenX;
-                var y = evt.screenY;
+                var x = evt.pageX;
+                var y = evt.pageY;
 
                 //drawing a line
                 var line = new Line(element);
@@ -48,6 +48,6 @@ require([
             }
         })
         .on("mouseup", function (evt) {
-            canvas.stopDrawing(evt.screenX, evt.screenY);
+            canvas.stopDrawing(evt.pageX, evt.pageY);
         });
 });
