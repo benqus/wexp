@@ -32,7 +32,6 @@ define([
             context.beginPath();
             context.moveTo.apply(context, this._from.getPositionsAsArray());
             context.lineTo.apply(context, this._to.getPositionsAsArray());
-            context.stroke();
 
             return Drawing.prototype.draw.call(this);
         }

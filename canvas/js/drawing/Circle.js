@@ -28,9 +28,6 @@ define([
 
             context.beginPath();
             context.arc(position.getX(), position.getY(), this.radius, 0, (2 * Math.PI));
-            context.fillStyle = "#ffffff";
-            context.fill();
-            context.stroke();
 
             return Drawing.prototype.draw.call(this);
         }

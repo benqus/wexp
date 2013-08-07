@@ -3,10 +3,27 @@ define(function () {
     var Drawing = function (canvas, context) {
         this.canvas = canvas;
         this.context = (context || "2d");
+
+        var context = this.getContext();
+
+        this.fillColor = context.fillStyle;
+        this.strokeColor = context.strokeStyle;
+        this.strokeWidth = context.lineWidth;
+        this.globalCompositeOperation = "source-over";
     };
 
     Drawing.prototype = {
         constructor: Drawing,
+
+        below: function () {
+            this.globalCompositeOperation = "destination-over";
+            return this;
+        },
+
+        above: function () {
+            this.globalCompositeOperation = "source-over";
+            return this;
+        },
 
         getCanvas: function () {
             return this.canvas;
@@ -16,10 +33,35 @@ define(function () {
             return this.getCanvas().getContext(this.context);
         },
 
+        setStrokeColor: function (color) {
+            this.strokeColor = color;
+            return this;
+        },
+
+        setStrokeWidth: function (width) {
+            this.strokeWidth = width;
+            return this;
+        },
+
+        setFillColor: function (color) {
+            this.fillColor = color;
+            return this;
+        },
+
         //base draw method, needs to be overridden
         draw: function () {
-//            this.getContext()
-//                .restore();
+            var context = this.getContext();
+
+            //drawing Drawing
+            context.fillStyle = this.fillColor;
+            context.strokeStyle = this.strokeColor;
+            context.lineWidth = this.strokeWidth;
+            context.globalCompositeOperation = this.globalCompositeOperation;
+            context.fill();
+            context.stroke();
+
+            //restoring context
+            context.restore();
 
             return this;
         }
