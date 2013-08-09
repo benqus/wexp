@@ -48,12 +48,11 @@
             end = Date.now();
 
             console.log(type + ": " + (end - start) + "ms");
-            console.log("---------");
         }
     };
 
     window.onload = function () {
-        test.run("dots");
         test.run("brackets");
+        test.run("dots");
     };
 }());
