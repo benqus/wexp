@@ -4,7 +4,7 @@ define(function () {
         this.canvas = canvas;
         this.context = (context || "2d");
 
-        var context = this.getContext();
+        context = this.getContext();
 
         this.fillColor = context.fillStyle;
         this.strokeColor = context.strokeStyle;
@@ -82,10 +82,7 @@ define(function () {
             };
         }
 
-        var Surrogate = function () {};
-        Surrogate.prototype = Base.prototype;
-
-        var surrogate = new Surrogate();
+        var surrogate = Object.create(Base.prototype);
 
         //merging prototype properties
         var i;
