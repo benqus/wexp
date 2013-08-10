@@ -67,8 +67,8 @@ define(function () {
         }
     };
 
-    Drawing.extend = function (proto) {
-        var Base = this;
+    Drawing.extend = function extend(proto) {
+        var Super = this;
         var constructor;
 
         proto || (proto = {});
@@ -78,11 +78,11 @@ define(function () {
             delete proto.constructor;
         } else {
             constructor = function () {
-                return Base.apply(this, arguments);
+                return Super.apply(this, arguments);
             };
         }
 
-        var surrogate = Object.create(Base.prototype);
+        var surrogate = Object.create(Super.prototype);
 
         //merging prototype properties
         var i;
@@ -97,7 +97,8 @@ define(function () {
 
         //setting inheritance
         constructor.prototype = surrogate;
-        constructor.extend = Base.extend;
+        constructor.extend = extend;
+        constructor.base = Super;
 
         return constructor;
     };
