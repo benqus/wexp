@@ -1,11 +1,19 @@
+/**
+ * Draws a Circle
+ * @extends {Drawing}
+ * @type {Circle}
+ */
 var Circle = gauges.Circle = Drawing.extend({
-    constructor: function (x, y, radius, start, end, clockWise) {
+    /**
+     * @constructor
+     * @param x {Number}
+     * @param y {Number}
+     * @param radius {Number}
+     */
+    constructor: function (x, y, radius) {
         this.x = (x || 0);
         this.y = (y || 0);
-        this.r = (radius || gauges.defaults);
-        this.start = (start || 0);
-        this.end = (end || (Math.PI * 2));
-        this.clockWise = (clockWise !== false);
+        this.r = (radius || gauges.DEFAULTS.Circle.radius);
     },
 
     getX: function () {
@@ -21,17 +29,21 @@ var Circle = gauges.Circle = Drawing.extend({
     },
 
     getStartAngle: function () {
-        return this.start;
+        return 0;
     },
 
     getEndAngle: function () {
-        return this.end;
+        return (Math.PI * 2);
     },
 
     isClockWise: function () {
-        return this.clockWise;
+        return false;
     },
 
+    /**
+     * @override
+     * @param context {CanvasRenderingContext2D}
+     */
     draw: function (context) {
         context.arc(
             this.getX(),

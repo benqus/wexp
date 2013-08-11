@@ -1,5 +1,9 @@
 function Base() {}
 
+Base.prototype = {
+    constructor: Base
+};
+
 Base.extend = function extend(proto) {
     proto || (proto = {});
 
