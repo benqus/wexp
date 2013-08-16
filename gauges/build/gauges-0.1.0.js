@@ -40,6 +40,12 @@
     global.gauges && (gauges._gauges = global.gauges);
     global.gauges = gauges;
 
+    /**
+     * creates a new HTMLCanvasElement
+     * @param width {Number}
+     * @param height {Number}
+     * @returns {HTMLCanvasElement}
+     */
     function createCanvas(width, height) {
         var defaults = gauges.defaults;
         var canvas = document.createElement('canvas');
@@ -50,6 +56,11 @@
         return canvas;
     }
     
+    /**
+     * Returns a HTMLCanvasElement from the document (if the argument is String type) or the given HTMLCanvasElement
+     * @param canvas {String|HTMLCanvasElement}
+     * @returns {undefined|HTMLCanvasElement}
+     */
     function getCanvas(canvas) {
         if (typeof canvas === "string") {
             canvas = document.getElementById(canvas);
@@ -58,6 +69,11 @@
         return canvas;
     }
     
+    /**
+     * Return the context of a HTMLCanvasElement
+     * @param canvas {HTMLCanvasElement}
+     * @returns {*|CanvasRenderingContext2D}
+     */
     function getContext(canvas) {
         return canvas.getContext("2d");
     }
@@ -77,6 +93,12 @@
         return console;
     }
     
+    /**
+     * Merges all enumerable properties from the provider object to the receiver object
+     * @param receiver {Object}
+     * @param provider  {Object}
+     * @returns {Object}
+     */
     function mix(receiver, provider) {
         var i;
     
@@ -88,6 +110,52 @@
     
         return receiver;
     }
+    
+    /**
+     * Determines whether a string is a hexadecimal string
+     * @param string {String}
+     * @returns {*|Boolean}
+     */
+    function isHexaColor(string) {
+        //string and proper length for
+        if (typeof string === 'string' && [3, 4, 6, 8].indexOf(string.length) > -1) {
+            return ((/^#[a-f\d]$/).test(string));
+        }
+    
+        return false;
+    }
+    
+    /**
+     * Determines whether a string is an RGB string. Example: "rgba(255, 255, 255, 0.45)" or "rgba(255, 120, 0)"
+     * @param string {String}
+     * @returns {*|Boolean}
+     */
+    function isRGBColor(string) {
+        var valid = false;
+        var args;
+    
+        if (typeof string === 'string') {
+            args = string.replace(/[\s\)]/g, '').replace('(', ',').split(',');
+    
+            valid = (
+                /^rgb(a)?$/.test(args[0]) && //is rgb or rgba
+                parseInt(args[1], 10) < 256 && // R is less than 256
+                parseInt(args[2], 10) < 256 && // G is less than 256
+                parseInt(args[3], 10) < 256 && // B is less than 256
+                (typeof args[4] === 'undefined' || parseFloat(args[4], 10) < 1)  // Alpha
+            );
+        }
+    
+        return valid;
+    }
+    
+    gauges.mix = mix;
+    gauges.createCanvas = createCanvas;
+    gauges.getCanvas = getCanvas;
+    gauges.getContext = getContext;
+    gauges.getConsole = getConsole;
+    gauges.isHexaColor = isHexaColor;
+    gauges.isRGBColor = isRGBColor;
 
     function Base() {}
     
@@ -273,10 +341,25 @@
         }
     };
     
+    /**
+     * Creates and returns a new Color instance from hexadecimal string
+     * @param hex {String}
+     * @returns {Color}
+     */
     Color.fromHex = function (hex) {
         var color = Color.convert.HexToRGB(hex);
     
         return new Color(color[0], color[1], color[2], color[3]);
+    };
+    
+    /**
+     * Determines whether the given parameter is a Color instance
+     * @static
+     * @param color {*}
+     * @returns {Boolean}
+     */
+    Color.isColor = function (color) {
+        return (color instanceof Color);
     };
 
     /**
@@ -292,12 +375,32 @@
         constructor: function (canvas, isolated) {
             this.canvas = undefined;
             this.context = undefined;
+    
+            /**
+             * @type {Number}
+             */
+            this.x = undefined;
+            /**
+             * @type {Number}
+             */
+            this.y = undefined;
+            /**
+             * @type {Boolean}
+             */
             this.isolated = (isolated === true);
+            /**
+             * @type {Number}
+             */
             this.rotated = 0;
+            /**
+             * @type {Number}
+             */
             this.scaleX = DEFAULTS.scaleX;
+            /**
+             * @type {Number}
+             */
             this.scaleY = DEFAULTS.scaleY;
     
-            //TODO: implement these stuff
             /**
              * @type {Shadow}
              */
@@ -318,6 +421,14 @@
             if (canvas) {
                 this.setCanvas(canvas);
             }
+        },
+    
+        getX: function () {
+            return this.x;
+        },
+    
+        getY: function () {
+            return this.y;
         },
     
         getWidth: function () {
@@ -352,12 +463,28 @@
             return this.strokeColor.toString();
         },
     
+        getBlur: function () {
+            return this.blur;
+        },
+    
+        getShadow: function () {
+            return this.shadow;
+        },
+    
+        hasBlur: function () {
+            return (this.blur instanceof Blur);
+        },
+    
+        hasShadow: function () {
+            return (this.shadow instanceof Shadow);
+        },
+    
         /**
          * @param canvas
          * @returns {*}
          */
         setCanvas: function (canvas) {
-            if (canvas) {
+            if (canvas instanceof HTMLCanvasElement) {
                 this.canvas = getCanvas(canvas);
                 this.context = getContext(this.canvas);
             }
@@ -365,14 +492,60 @@
             return this;
         },
     
-        shadow: function () {
+        /**
+         * Sets the fill for the drawing
+         * @param color {Color}
+         * @returns {Drawing}
+         */
+        setFill: function (color) {
+            if (color instanceof Color) {
+                this.isolate();
+                this.strokeColor = color;
+            }
+    
             return this;
         },
     
-        blur: function (blur) {
-            var color = (this.getStrokeColor() || this.getFillColor());
+        /**
+         * Sets the stroke for the drawing
+         * @param color {Color}
+         * @returns {Drawing}
+         */
+        setStroke: function (color) {
+            if (color instanceof Color) {
+                this.isolate();
+                this.strokeColor = color;
+            }
+    
+            return this;
+        },
+    
+        /**
+         * Adds a drop shadow for the Drawing
+         * @param shadow {Shadow} a Shadow instance
+         * @returns {Drawing}
+         */
+        setShadow: function (shadow) {
+            if (shadow instanceof Shadow) {
+                this.isolate();
+                this.shadow = shadow;
+            }
+    
+            return this;
+        },
+    
+        /**
+         * Adds a Blur to the Drawing
+         * @param blur {Blur}
+         * @param [color] {Color}
+         * @returns {Drawing}
+         */
+        setBlur: function (blur, color) {
+            //color is either specified or the stroke color or the fill color
+            color = (color || this.getStrokeColor() || this.getFillColor());
     
             if (color) {
+                this.isolate();
                 this.blur = new Blur(blur, color.clone());
             }
     
@@ -385,7 +558,7 @@
          * @returns {Number}
          */
         convertAngle: function (angle) {
-            return (Math.PI * (angle * 180));
+            return (Math.PI * (angle / 180));
         },
     
         /**
@@ -443,6 +616,9 @@
                 var rotation = this.getRotation();
                 var scaleX = this.getScaleX();
                 var scaleY = this.getScaleY();
+                var shadow = this.getShadow();
+                var blur = this.getBlur();
+                var stroke = this.get();
     
                 context.save();
     
@@ -554,6 +730,13 @@
             context.restore();
     
             return this;
+        }
+    });
+
+    var Stroke = gauges.Stroke = Base.extend({
+        constructor: function (width, color) {
+            this.width = width;
+            this.color = color;
         }
     });
 

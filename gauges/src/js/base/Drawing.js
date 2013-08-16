@@ -11,12 +11,32 @@ var Drawing = gauges.Drawing = Base.extend({
     constructor: function (canvas, isolated) {
         this.canvas = undefined;
         this.context = undefined;
+
+        /**
+         * @type {Number}
+         */
+        this.x = undefined;
+        /**
+         * @type {Number}
+         */
+        this.y = undefined;
+        /**
+         * @type {Boolean}
+         */
         this.isolated = (isolated === true);
+        /**
+         * @type {Number}
+         */
         this.rotated = 0;
+        /**
+         * @type {Number}
+         */
         this.scaleX = DEFAULTS.scaleX;
+        /**
+         * @type {Number}
+         */
         this.scaleY = DEFAULTS.scaleY;
 
-        //TODO: implement these stuff
         /**
          * @type {Shadow}
          */
@@ -37,6 +57,14 @@ var Drawing = gauges.Drawing = Base.extend({
         if (canvas) {
             this.setCanvas(canvas);
         }
+    },
+
+    getX: function () {
+        return this.x;
+    },
+
+    getY: function () {
+        return this.y;
     },
 
     getWidth: function () {
@@ -71,12 +99,28 @@ var Drawing = gauges.Drawing = Base.extend({
         return this.strokeColor.toString();
     },
 
+    getBlur: function () {
+        return this.blur;
+    },
+
+    getShadow: function () {
+        return this.shadow;
+    },
+
+    hasBlur: function () {
+        return (this.blur instanceof Blur);
+    },
+
+    hasShadow: function () {
+        return (this.shadow instanceof Shadow);
+    },
+
     /**
      * @param canvas
      * @returns {*}
      */
     setCanvas: function (canvas) {
-        if (canvas) {
+        if (canvas instanceof HTMLCanvasElement) {
             this.canvas = getCanvas(canvas);
             this.context = getContext(this.canvas);
         }
@@ -84,14 +128,60 @@ var Drawing = gauges.Drawing = Base.extend({
         return this;
     },
 
-    shadow: function () {
+    /**
+     * Sets the fill for the drawing
+     * @param color {Color}
+     * @returns {Drawing}
+     */
+    setFill: function (color) {
+        if (color instanceof Color) {
+            this.isolate();
+            this.strokeColor = color;
+        }
+
         return this;
     },
 
-    blur: function (blur) {
-        var color = (this.getStrokeColor() || this.getFillColor());
+    /**
+     * Sets the stroke for the drawing
+     * @param color {Color}
+     * @returns {Drawing}
+     */
+    setStroke: function (color) {
+        if (color instanceof Color) {
+            this.isolate();
+            this.strokeColor = color;
+        }
+
+        return this;
+    },
+
+    /**
+     * Adds a drop shadow for the Drawing
+     * @param shadow {Shadow} a Shadow instance
+     * @returns {Drawing}
+     */
+    setShadow: function (shadow) {
+        if (shadow instanceof Shadow) {
+            this.isolate();
+            this.shadow = shadow;
+        }
+
+        return this;
+    },
+
+    /**
+     * Adds a Blur to the Drawing
+     * @param blur {Blur}
+     * @param [color] {Color}
+     * @returns {Drawing}
+     */
+    setBlur: function (blur, color) {
+        //color is either specified or the stroke color or the fill color
+        color = (color || this.getStrokeColor() || this.getFillColor());
 
         if (color) {
+            this.isolate();
             this.blur = new Blur(blur, color.clone());
         }
 
@@ -104,7 +194,7 @@ var Drawing = gauges.Drawing = Base.extend({
      * @returns {Number}
      */
     convertAngle: function (angle) {
-        return (Math.PI * (angle * 180));
+        return (Math.PI * (angle / 180));
     },
 
     /**
@@ -162,6 +252,9 @@ var Drawing = gauges.Drawing = Base.extend({
             var rotation = this.getRotation();
             var scaleX = this.getScaleX();
             var scaleY = this.getScaleY();
+            var shadow = this.getShadow();
+            var blur = this.getBlur();
+            var stroke = this.get();
 
             context.save();
 
