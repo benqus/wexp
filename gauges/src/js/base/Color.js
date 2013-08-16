@@ -152,8 +152,23 @@ Color.convert = {
     }
 };
 
+/**
+ * Creates and returns a new Color instance from hexadecimal string
+ * @param hex {String}
+ * @returns {Color}
+ */
 Color.fromHex = function (hex) {
     var color = Color.convert.HexToRGB(hex);
 
     return new Color(color[0], color[1], color[2], color[3]);
+};
+
+/**
+ * Determines whether the given parameter is a Color instance
+ * @static
+ * @param color {*}
+ * @returns {Boolean}
+ */
+Color.isColor = function (color) {
+    return (color instanceof Color);
 };
